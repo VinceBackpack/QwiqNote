@@ -86,9 +86,15 @@ fun NotesApp(context: Context) {
             items(notes) { note ->
                 NoteCard(
                     note = note,
+                    onEdit = { newText ->
+                        val updatedNotes = notes.map {
+                            if (it == note) newText else it
+                        }
+                        notes = updatedNotes
+                        saveNotes(context, updatedNotes)
+                    },
                     onDelete = {
-                        notes = notes - note
-                        saveNotes(context, notes)
+                        notes = deleteNote(context, notes, note)
                     }
                 )
             }
@@ -96,28 +102,47 @@ fun NotesApp(context: Context) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NoteCard(note: String, onDelete: () -> Unit) {
+fun NoteCard(note: String, onDelete: () -> Unit, onEdit:(String) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
+        var isEditing by remember { mutableStateOf(false) }
+        var editedText by remember { mutableStateOf(note) }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(note, modifier = Modifier.weight(1f))
-            Spacer(modifier = Modifier.width(8.dp))
-            //Delete button
-            Button(
-                onClick = onDelete,
-                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)
-            ) {
-                Text("Delete")
+            if (isEditing) {
+                OutlinedTextField(
+                    value = editedText,
+                    onValueChange = { editedText = it }
+                )
+                Button(onClick = {
+                    onEdit(editedText)
+                    isEditing = false
+                }) {
+                    Text("Save")
+                }
+            } else {
+                Text(note)
+                Row {
+                    // Edit Button
+                    Button(onClick = { isEditing = true }) {
+                        Text("Edit")
+                    }
+                    //Delete Button
+                    Button(onClick = { onDelete() }) {
+                        Text("Delete")
+                    }
+                }
             }
         }
     }
@@ -137,4 +162,10 @@ fun saveNotes(context: Context, notes: List<String>) {
 fun loadNotes(context: Context): List<String> {
     val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     return prefs.getStringSet(NOTES_KEY, emptySet())?.toList() ?: emptyList()
+}
+
+fun deleteNote(context: Context, notes: List<String>, noteToDelete: String): List<String> {
+    val updatedNotes = notes - noteToDelete
+    saveNotes(context, updatedNotes)
+    return updatedNotes
 }
