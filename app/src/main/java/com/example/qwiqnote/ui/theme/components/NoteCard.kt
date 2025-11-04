@@ -17,6 +17,7 @@ fun NoteCard(
 ) {
     var isEditing by remember { mutableStateOf(false) }
     var editedText by remember { mutableStateOf(note.content) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
@@ -46,10 +47,34 @@ fun NoteCard(
                 Text(note.content)
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-                    TextButton(onClick = { isEditing = true }) { Text("Edit") }
-                    TextButton(onClick = onDelete) { Text("Delete") }
+                    TextButton(onClick = { isEditing = true }) {
+                        Text("Edit") }
+                    TextButton(onClick = { showDeleteDialog = true}) {
+                        Text("Delete") }
                 }
             }
         }
+    }
+
+    //Delete confirmation dialog
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Delete Note") },
+            text = { Text("Are you sure you want to delete this note?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    onDelete()
+                    showDeleteDialog = false
+                }) {
+                    Text("Delete", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 }
