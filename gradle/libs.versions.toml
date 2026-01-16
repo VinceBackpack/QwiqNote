@@ -1,0 +1,14 @@
+[versions]
+kotlin = "1.9.20"
+compose-bom = "2026.01.00"
+material3 = "1.4.0"
+activity = "1.10.1"
+
+[libraries]
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
+material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
+activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
+ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-bom" }
+ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "compose-bom" }
+ui = { module = "androidx.compose.ui:ui", version.ref = "compose-bom" }
