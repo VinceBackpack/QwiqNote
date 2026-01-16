@@ -7,6 +7,18 @@ import org.json.JSONObject
 
 private const val PREFS_NAME = "notes_prefs"
 private const val NOTES_KEY = "notes_list"
+private const val NEXT_ID_KEY = "next_note_id"
+
+/**
+ * Store a unique ID for next note, ready for when the app is opened again
+ */
+
+fun getNextNoteId(context: Context): Long {
+    val prefs = context.getSharedPreferences("notes_prefs", Context.MODE_PRIVATE)
+    val nextId = prefs.getLong(NEXT_ID_KEY, 1L)
+    prefs.edit().putLong(NEXT_ID_KEY, nextId + 1).apply()
+    return nextId
+}
 
 /**
  * Saves a list of notes into SharedPreferences as a JSON string.

@@ -2,6 +2,6 @@
 package com.example.qwiqnote.model
 
 data class Note(
-    val id: Long = System.currentTimeMillis(),
+    val id: Long,
     val content: String
 )

@@ -4,12 +4,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
 import com.example.qwiqnote.data.*
 import com.example.qwiqnote.model.Note
 import com.example.qwiqnote.ui.theme.components.NoteCard
@@ -40,7 +42,11 @@ fun NotesApp() {
             value = noteText,
             onValueChange = { noteText = it },
             label = { Text("Write a note...") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.DarkGray
+            )
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -48,7 +54,7 @@ fun NotesApp() {
         Button(
             onClick = {
                 if (noteText.isNotBlank()) {
-                    notes = notes + Note(content = noteText)
+                    notes = notes + Note(id = getNextNoteId(context), content = noteText)
                     saveNotes(context, notes)
                     noteText = ""
                 }

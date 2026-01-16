@@ -7,6 +7,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.qwiqnote.model.Note
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Icon
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,8 +52,13 @@ fun NoteCard(
                 Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
                     TextButton(onClick = { isEditing = true }) {
                         Text("Edit") }
-                    TextButton(onClick = { showDeleteDialog = true}) {
-                        Text("Delete") }
+                    IconButton(onClick = { showDeleteDialog = true }) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Delete note",
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                    }
                 }
             }
         }
